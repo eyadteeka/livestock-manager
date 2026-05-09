@@ -1003,592 +1003,988 @@
       border-radius: 50px;
       white-space: nowrap;
     }
+
+    .confirm-dialog {
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .confirm-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .confirm-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .collapsible {
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+
+    .collapsible.closed {
+      max-height: 0 !important;
+    }
+
+    mark {
+      background: #fef9c3;
+      color: var(--text);
+      border-radius: 3px;
+      padding: 0 2px;
+    }
+
+    @media (max-width: 768px) {
+      .header-inner {
+        padding: 12px 16px;
+      }
+
+      .header-stats {
+        display: none;
+      }
+
+      .container {
+        padding: 16px 12px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .form-body {
+        padding: 16px;
+      }
+
+      .section-header {
+        padding: 14px 16px;
+        flex-wrap: wrap;
+      }
+
+      .toolbar {
+        padding: 12px 16px;
+        gap: 8px;
+      }
+
+      .toolbar-actions {
+        width: 100%;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .summary-card {
+        padding: 14px;
+      }
+
+      .summary-value {
+        font-size: 1.2rem;
+      }
+
+      .btn {
+        font-size: 0.8rem;
+        padding: 9px 14px;
+      }
+
+      .per-head-row {
+        grid-template-columns: 32px 1fr;
+      }
+
+      .per-head-label {
+        display: none;
+      }
+
+      .per-head-subtotal {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .header-title h1 {
+        font-size: 1rem;
+      }
+
+      .filter-tabs {
+        gap: 4px;
+      }
+
+      .filter-tab {
+        padding: 5px 10px;
+        font-size: 0.72rem;
+      }
+    }
+
+    @media print {
+
+      .header,
+      .form-section,
+      .toolbar,
+      .actions-cell {
+        display: none !important;
+      }
+
+      .table-wrapper {
+        overflow: visible;
+      }
+
+      table {
+        font-size: 11px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <!-- HEADER -->
-  <div class="header">
+
+  <header class="header">
     <div class="header-inner">
       <div class="header-brand">
-        <div class="header-icon">🐑</div>
+        <div class="header-icon">
+          <img src="512.png" alt="شعار الموقع" style="width:40px;height:40px;border-radius:8px;">
+        </div>
         <div class="header-title">
-          <h1>مدير الثروة الحيوانية</h1>
-          <p>إجريمة لبيع أضاحي العيد</p>
+          <h1>إجريمة لبيع أضاحي العيد</h1>
+          <p>تتبع المبيعات والمدفوعات والتسليم</p>
         </div>
       </div>
       <div class="header-stats">
-        <div class="stat-chip">📊 إحصائيات</div>
-        <div class="stat-chip">👥 <span id="totalAnimals">0</span></div>
+        <div class="stat-chip">📦 <span id="hdr-total">0</span> سجل</div>
+        <div class="stat-chip">💰 <span id="hdr-pending">0</span> معلق</div>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- MAIN CONTAINER -->
-  <div class="container">
-    <!-- SUMMARY CARDS -->
-    <div class="summary-grid">
-      <div class="summary-card">
-        <div class="summary-icon green">💰</div>
-        <div class="summary-info">
-          <div class="summary-value" id="summaryTotalAmount">0</div>
-          <div class="summary-label">الإجمالي</div>
-        </div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-icon blue">💵</div>
-        <div class="summary-info">
-          <div class="summary-value" id="summaryPaidAmount">0</div>
-          <div class="summary-label">المدفوع</div>
-        </div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-icon red">⏳</div>
-        <div class="summary-info">
-          <div class="summary-value" id="summaryRemainingAmount">0</div>
-          <div class="summary-label">المتبقي</div>
-        </div>
-      </div>
-    </div>
+  <div class="notification-container" id="notifContainer"></div>
 
-    <!-- ADD FORM -->
-    <form id="addForm" class="card form-section">
-      <div class="section-header">
-        <h2 class="section-title">🐑 إضافة طلب جديد</h2>
-      </div>
-      <div class="form-body">
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">اسم العميل <span class="required">*</span></label>
-            <input type="text" id="f_name" class="form-input" placeholder="أدخل اسم العميل" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">رقم الهاتف <span class="required">*</span></label>
-            <input type="tel" id="f_phone" class="form-input" placeholder="أدخل رقم الهاتف" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">العدد <span class="required">*</span></label>
-            <input type="number" id="f_qty" class="form-input" min="1" placeholder="أدخل العدد" value="1" required>
-          </div>
+  <!-- CONFIRM MODAL -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal confirm-dialog">
+      <div class="modal-body" style="padding:32px 24px;">
+        <div class="confirm-icon" id="confirmIcon">⚠️</div>
+        <div class="modal-title" id="confirmTitle" style="font-size:1.1rem;margin-bottom:10px;text-align:center;"></div>
+        <div class="confirm-text" id="confirmText"></div>
+        <div style="display:flex;gap:10px;justify-content:center;">
+          <button class="btn btn-danger" id="confirmYes">✓ تأكيد</button>
+          <button class="btn btn-secondary" onclick="closeConfirm()">✕ إلغاء</button>
         </div>
-
-        <!-- SINGLE SECTION -->
-        <div id="f_singleSection" class="form-section-label" style="display: none; margin-top: 16px;">
-          ✏️ تفاصيل الحيوان
-        </div>
-        <div id="f_singleSection" class="form-grid" style="display: none;">
-          <div class="form-group">
-            <label class="form-label">السعر <span class="required">*</span></label>
-            <input type="number" id="f_singlePrice" class="form-input" placeholder="أدخل السعر">
-          </div>
-          <div class="form-group">
-            <label class="form-label">المدفوع <span class="required">*</span></label>
-            <input type="number" id="f_singlePaid" class="form-input" placeholder="أدخل المدفوع" value="0">
-          </div>
-          <div class="form-group">
-            <label class="form-label">المتبقي</label>
-            <input type="text" id="f_singleRemaining" class="form-input" readonly placeholder="سيتم حسابه تلقائياً">
-          </div>
-        </div>
-
-        <!-- PER-HEAD SECTION -->
-        <div id="f_perHeadSection" class="per-head-section" style="display: none;">
-          <div class="per-head-header">
-            <div class="per-head-title">📋 تفاصيل كل حيوان</div>
-          </div>
-          <div class="per-head-body">
-            <div class="same-price-row">
-              <label>
-                <input type="checkbox" id="f_samePriceToggle" class="form-input" style="width: auto;">
-                <span>نفس السعر لكل حيوان</span>
-              </label>
-              <div class="same-price-input-wrap" style="display: none;" id="f_samePriceInput">
-                <input type="number" id="f_samePriceValue" class="form-input" placeholder="أدخل السعر">
-              </div>
-            </div>
-            <div class="per-head-rows" id="f_rows"></div>
-            <div class="per-head-note">
-              💡 يمكنك تعديل السعر والمدفوع لكل حيوان على حدة
-            </div>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">✅ حفظ الطلب</button>
-          <button type="reset" class="btn btn-secondary">🔄 مسح</button>
-        </div>
-      </div>
-    </form>
-
-    <!-- TABLE SECTION -->
-    <div class="table-section card">
-      <div class="toolbar">
-        <div class="search-box">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="ابحث عن عميل...">
-        </div>
-        <div class="filter-tabs">
-          <button class="filter-tab active" data-filter="all">الكل</button>
-          <button class="filter-tab" data-filter="pending">قيد الانتظار</button>
-          <button class="filter-tab" data-filter="paid">مدفوع بالكامل</button>
-        </div>
-        <div class="record-count" id="recordCount">0 طلب</div>
-      </div>
-      <div class="table-wrapper">
-        <table id="ordersTable">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>اسم العميل</th>
-              <th>رقم الهاتف</th>
-              <th>عدد الحيوانات</th>
-              <th>الإجمالي</th>
-              <th>المدفوع</th>
-              <th>المتبقي</th>
-              <th>الحالة</th>
-              <th>التفاصيل</th>
-              <th>الإجراءات</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-          </tbody>
-        </table>
-      </div>
-      <div id="emptyState" class="empty-state" style="display: none;">
-        <div class="empty-icon">📭</div>
-        <h3>لا توجد سجلات</h3>
-      </div>
-    </div>
-  </div>
-
-  <!-- DETAILS MODAL -->
-  <div id="detailsModal" class="modal-overlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h2 class="modal-title" id="modalTitle">تفاصيل الطلب</h2>
-        <button class="btn-close">✕</button>
-      </div>
-      <div class="modal-body">
-        <div id="modalContent"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" id="closeModalBtn">إغلاق</button>
-        <button class="btn btn-primary" id="editOrderBtn">✏️ تعديل</button>
       </div>
     </div>
   </div>
 
   <!-- EDIT MODAL -->
-  <div id="editModal" class="modal-overlay">
+  <div class="modal-overlay" id="editModal">
     <div class="modal">
       <div class="modal-header">
-        <h2 class="modal-title">تعديل الطلب</h2>
-        <button class="btn-close">✕</button>
+        <div class="modal-title">✏️ تعديل السجل</div>
+        <button class="btn-close" onclick="closeEdit()">✕</button>
       </div>
       <div class="modal-body">
-        <form id="editForm">
+        <div class="form-section-label">📋 بيانات العميل</div>
+        <div class="form-grid" style="margin-bottom:20px;">
           <div class="form-group">
-            <label class="form-label">اسم العميل</label>
-            <input type="text" id="edit_name" class="form-input">
+            <label class="form-label">اسم العميل <span class="required">*</span></label>
+            <input type="text" class="form-input" id="e_customer" placeholder="اسم العميل الكامل">
           </div>
           <div class="form-group">
             <label class="form-label">رقم الهاتف</label>
-            <input type="tel" id="edit_phone" class="form-input">
+            <input type="tel" class="form-input" id="e_phone" placeholder="رقم الهاتف">
           </div>
-          <div id="edit_items_container"></div>
-        </form>
+          <div class="form-group">
+            <label class="form-label">رقم الخروف / المواشي <span class="required">*</span></label>
+            <input type="text" class="form-input" id="e_sheepId" placeholder="مثال: SH-001">
+          </div>
+          <div class="form-group">
+            <label class="form-label">الكمية <span class="required">*</span></label>
+            <input type="number" class="form-input" id="e_qty" min="1" placeholder="0" oninput="onEditQtyChange()">
+          </div>
+        </div>
+
+        <!-- Per-head (edit) -->
+        <div id="e_perHeadSection" style="display:none;">
+          <div class="per-head-section">
+            <div class="per-head-header">
+              <div class="per-head-title">🐑 سعر كل رأس على حدة</div>
+            </div>
+            <div class="per-head-body">
+              <div class="same-price-row">
+                <label>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="e_samePrice" onchange="onEditSamePriceToggle()">
+                    <div class="toggle-slider"></div>
+                  </div>
+                  تطبيق نفس السعر على جميع الرؤوس
+                </label>
+                <div class="same-price-input-wrap" id="e_samePriceWrap" style="display:none;">
+                  <input type="number" class="per-head-input" id="e_uniformPrice" min="0" step="0.01"
+                    placeholder="السعر الموحد..." oninput="applyEditUniform()">
+                </div>
+              </div>
+              <div class="per-head-rows" id="e_headRows"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single price (edit, qty=1) -->
+        <div id="e_singleSection" style="display:none;margin-bottom:18px;">
+          <div class="form-section-label">💰 السعر</div>
+          <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:0;">
+            <div class="form-group">
+              <label class="form-label">السعر للرأس <span class="required">*</span></label>
+              <input type="number" class="form-input" id="e_price" min="0" step="0.01" placeholder="0.00"
+                oninput="calcEditSummary()">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section-label" style="margin-top:8px;">💵 الملخص المالي</div>
+        <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:18px;">
+          <div class="form-group">
+            <label class="form-label">الإجمالي</label>
+            <input type="number" class="form-input" id="e_total" readonly placeholder="محسوب تلقائياً">
+          </div>
+          <div class="form-group">
+            <label class="form-label">المدفوع</label>
+            <input type="number" class="form-input" id="e_paid" min="0" step="0.01" placeholder="0.00"
+              oninput="calcEditSummary()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">المتبقي</label>
+            <input type="number" class="form-input" id="e_remaining" readonly placeholder="محسوب تلقائياً">
+          </div>
+          <div class="form-group">
+            <label class="form-label">حالة التسليم</label>
+            <select class="form-select" id="e_delivery">
+              <option value="farm">لا يزال في المزرعة</option>
+              <option value="delivered">تم التسليم</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">ملاحظات</label>
+          <textarea class="form-textarea" id="e_notes" placeholder="أي ملاحظات إضافية..."></textarea>
+        </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="closeEditModalBtn">إغلاق</button>
-        <button class="btn btn-primary" id="saveEditBtn">💾 حفظ التعديلات</button>
+        <button class="btn btn-primary" onclick="saveEdit()">💾 حفظ التعديلات</button>
+        <button class="btn btn-secondary" onclick="closeEdit()">إلغاء</button>
       </div>
     </div>
   </div>
 
-  <!-- NOTIFICATION CONTAINER -->
-  <div class="notification-container" id="notificationContainer"></div>
+  <!-- MAIN -->
+  <div class="container">
+
+    <!-- SUMMARY CARDS -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-icon green">📋</div>
+        <div class="summary-info">
+          <div class="summary-value" id="sum-records">0</div>
+          <div class="summary-label">إجمالي السجلات</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon blue">💵</div>
+        <div class="summary-info">
+          <div class="summary-value" id="sum-total">0</div>
+          <div class="summary-label">إجمالي المبيعات</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon green">✅</div>
+        <div class="summary-info">
+          <div class="summary-value" id="sum-paid">0</div>
+          <div class="summary-label">إجمالي المحصّل</div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon red">⏳</div>
+        <div class="summary-info">
+          <div class="summary-value" id="sum-remaining">0</div>
+          <div class="summary-label">إجمالي المتبقي</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD FORM -->
+    <div class="form-section card">
+      <div class="section-header">
+        <div class="section-title"><span>➕</span> إضافة سجل بيع جديد</div>
+        <button class="btn btn-secondary btn-sm" onclick="toggleForm()" id="formToggleBtn">▲ طي</button>
+      </div>
+      <div class="collapsible" id="formCollapsible">
+        <div class="form-body">
+
+          <div class="form-section-label">📋 بيانات العميل</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">اسم العميل <span class="required">*</span></label>
+              <input type="text" class="form-input" id="f_customer" placeholder="اسم العميل الكامل">
+            </div>
+            <div class="form-group">
+              <label class="form-label">رقم الهاتف</label>
+              <input type="tel" class="form-input" id="f_phone" placeholder="رقم الهاتف">
+            </div>
+            <div class="form-group">
+              <label class="form-label">رقم الخروف / المواشي <span class="required">*</span></label>
+              <input type="text" class="form-input" id="f_sheepId" placeholder="مثال: SH-001">
+            </div>
+            <div class="form-group">
+              <label class="form-label">الكمية <span class="required">*</span></label>
+              <input type="number" class="form-input" id="f_qty" min="1" placeholder="أدخل الكمية..."
+                oninput="onAddQtyChange()">
+            </div>
+          </div>
+
+          <!-- Per-head (qty > 1) -->
+          <div id="f_perHeadSection" style="display:none;">
+            <div class="per-head-section">
+              <div class="per-head-header">
+                <div class="per-head-title">🐑 سعر كل رأس على حدة</div>
+                <div style="font-size:0.74rem;color:var(--primary-dark);opacity:0.8;">يمكن تعيين سعر مختلف لكل رأس</div>
+              </div>
+              <div class="per-head-body">
+                <div class="same-price-row">
+                  <label>
+                    <div class="toggle-switch">
+                      <input type="checkbox" id="f_samePrice" onchange="onAddSamePriceToggle()">
+                      <div class="toggle-slider"></div>
+                    </div>
+                    تطبيق نفس السعر على جميع الرؤوس
+                  </label>
+                  <div class="same-price-input-wrap" id="f_samePriceWrap" style="display:none;">
+                    <input type="number" class="per-head-input" id="f_uniformPrice" min="0" step="0.01"
+                      placeholder="السعر الموحد لكل رأس..." oninput="applyAddUniform()">
+                  </div>
+                </div>
+                <div class="per-head-rows" id="f_headRows"></div>
+                <div class="per-head-note">💡 الإجمالي يُحسب تلقائياً من مجموع أسعار جميع الرؤوس</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Single price (qty = 1) -->
+          <div id="f_singleSection" style="display:none;margin-bottom:18px;">
+            <div class="form-section-label">💰 السعر</div>
+            <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:0;">
+              <div class="form-group">
+                <label class="form-label">السعر للرأس <span class="required">*</span></label>
+                <input type="number" class="form-input" id="f_price" min="0" step="0.01" placeholder="0.00"
+                  oninput="calcAddSummary()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="form-section-label" style="margin-top:8px;">💵 الملخص المالي</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">الإجمالي</label>
+              <input type="number" class="form-input" id="f_total" readonly placeholder="محسوب تلقائياً">
+            </div>
+            <div class="form-group">
+              <label class="form-label">المبلغ المدفوع</label>
+              <input type="number" class="form-input" id="f_paid" min="0" step="0.01" placeholder="0.00"
+                oninput="calcAddSummary()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">المبلغ المتبقي</label>
+              <input type="number" class="form-input" id="f_remaining" readonly placeholder="محسوب تلقائياً">
+            </div>
+            <div class="form-group">
+              <label class="form-label">حالة التسليم</label>
+              <select class="form-select" id="f_delivery">
+                <option value="farm">لا يزال في المزرعة</option>
+                <option value="delivered">تم التسليم</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:18px;">
+            <label class="form-label">ملاحظات</label>
+            <textarea class="form-textarea" id="f_notes" placeholder="أي ملاحظات إضافية..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="addRecord()">✅ حفظ السجل</button>
+            <button class="btn btn-secondary" onclick="resetForm()">🔄 مسح الحقول</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-section card">
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="ابحث بالاسم أو رقم الخروف..." oninput="renderTable()">
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-filter="all" onclick="setFilter('all')">الكل</button>
+          <button class="filter-tab" data-filter="paid" onclick="setFilter('paid')">مدفوع</button>
+          <button class="filter-tab" data-filter="pending" onclick="setFilter('pending')">معلق</button>
+          <button class="filter-tab" data-filter="delivered" onclick="setFilter('delivered')">مُسلَّم</button>
+          <button class="filter-tab" data-filter="farm" onclick="setFilter('farm')">في المزرعة</button>
+        </div>
+        <span class="record-count" id="recordCount">0 سجل</span>
+        <div class="toolbar-actions">
+          <button class="btn btn-warning btn-sm" onclick="exportBackup()">📤 تصدير</button>
+          <label class="btn btn-outline btn-sm" style="cursor:pointer;">📥 استيراد<input type="file" id="importInput"
+              accept=".json" onchange="importBackup(event)" style="display:none;"></label>
+          <button class="btn btn-danger btn-sm" onclick="confirmClearAll()">🗑️ مسح الكل</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>العميل</th>
+              <th>الهاتف</th>
+              <th>رقم الخروف</th>
+              <th>الكمية</th>
+              <th>الأسعار (لكل رأس)</th>
+              <th>الإجمالي</th>
+              <th>المدفوع</th>
+              <th>المتبقي</th>
+              <th>الدفع</th>
+              <th>التسليم</th>
+              <th>التاريخ</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <div class="empty-icon">🐑</div>
+          <h3>لا توجد سجلات</h3>
+          <p>أضف أول سجل بيع باستخدام النموذج أعلاه</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
   <script>
-    // ========== DATA MANAGEMENT ==========
-    let orders = JSON.parse(localStorage.getItem('orders')) || [];
-    let currentOrderId = null;
-    let currentEditOrderId = null;
+    // ─── DATA ──────────────────────────────────────────────────────────────
+    const STORAGE_KEY = 'livestock_v3';
+    let records = [];
+    let currentFilter = 'all';
+    let editingId = null;
+    let confirmCallback = null;
 
-    // ========== UI UTILITIES ==========
-    function showNotification(message, type = 'success') {
-      const container = document.getElementById('notificationContainer');
-      const notification = document.createElement('div');
-      notification.className = `notification ${type}`;
-      notification.textContent = message;
-      container.appendChild(notification);
-      setTimeout(() => {
-        notification.classList.add('notification-fade');
-        setTimeout(() => notification.remove(), 300);
-      }, 3000);
+    function loadData() {
+      try { records = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+      catch (e) { records = []; }
     }
+    function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }
+    function generateId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
-    function formatCurrency(value) {
-      return new Intl.NumberFormat('ar-SA', {
-        style: 'currency',
-        currency: 'SAR'
-      }).format(value);
-    }
-
-    // ========== FORM HANDLERS ==========
-    const qtyInput = document.getElementById('f_qty');
-    const singleSection = document.getElementById('f_singleSection');
-    const perHeadSection = document.getElementById('f_perHeadSection');
-
-    qtyInput.addEventListener('change', function() {
-      const qty = parseInt(this.value) || 0;
-      singleSection.style.display = qty === 1 ? 'grid' : 'none';
-      perHeadSection.style.display = qty > 1 ? 'flex' : 'none';
-      
+    // ─── ADD FORM: QTY CHANGE ───────────────────────────────────────────────
+    function onAddQtyChange() {
+      const qty = parseInt(document.getElementById('f_qty').value) || 0;
+      document.getElementById('f_perHeadSection').style.display = qty > 1 ? 'block' : 'none';
+      document.getElementById('f_singleSection').style.display = qty === 1 ? 'block' : 'none';
       if (qty > 1) {
+        // document.getElementById('f_perHeadSection').style.height = '100vh';
         buildAddRows(qty);
+      } else {
+        document.getElementById('f_perHeadSection').style.height = '';
       }
-      
-      if (qty < 1) {
-        document.getElementById('f_total').value = '';
-        document.getElementById('f_remaining').value = '';
-      }
-    });
+      if (qty < 1) { document.getElementById('f_total').value = ''; document.getElementById('f_remaining').value = ''; }
+    }
 
     function buildAddRows(qty) {
-      const container = document.getElementById('f_rows');
+      const container = document.getElementById('f_headRows');
+      const old = Array.from(container.querySelectorAll('.per-head-input')).map(i => i.value);
       container.innerHTML = '';
-
-      for (let i = 1; i <= qty; i++) {
+      for (let i = 0; i < qty; i++) {
         const row = document.createElement('div');
         row.className = 'per-head-row';
         row.innerHTML = `
-          <div class="per-head-num">${i}</div>
-          <input type="number" class="per-head-input f_price" placeholder="السعر" data-index="${i}">
-          <input type="number" class="per-head-input f_paid" placeholder="المدفوع" data-index="${i}">
-          <div class="per-head-subtotal" id="subtotal_${i}">0 ر.س</div>
-        `;
+      <div class="per-head-num">${i + 1}</div>
+      <div class="per-head-label">الرأس ${i + 1}</div>
+      <input type="number" class="per-head-input" min="0" step="0.01"
+             placeholder="سعر الرأس ${i + 1}..." value="${old[i] || ''}"
+             oninput="calcAddSummary()">
+      <div class="per-head-subtotal" id="f_sub_${i}">${old[i] ? formatNum(old[i]) : '—'}</div>`;
         container.appendChild(row);
-
-        const priceInput = row.querySelector('.f_price');
-        const paidInput = row.querySelector('.f_paid');
-
-        [priceInput, paidInput].forEach(input => {
-          input.addEventListener('input', function() {
-            const price = parseFloat(priceInput.value) || 0;
-            const paid = parseFloat(paidInput.value) || 0;
-            const remaining = price - paid;
-            document.getElementById(`subtotal_${i}`).textContent = formatCurrency(remaining);
-          });
-        });
       }
+      calcAddSummary();
     }
 
-    const samePriceToggle = document.getElementById('f_samePriceToggle');
-    const samePriceInput = document.getElementById('f_samePriceInput');
+    function onAddSamePriceToggle() {
+      const on = document.getElementById('f_samePrice').checked;
+      document.getElementById('f_samePriceWrap').style.display = on ? 'block' : 'none';
+      if (!on) document.getElementById('f_uniformPrice').value = '';
+    }
 
-    samePriceToggle.addEventListener('change', function() {
-      samePriceInput.style.display = this.checked ? 'block' : 'none';
-      if (this.checked) {
-        document.getElementById('f_samePriceValue').addEventListener('input', function() {
-          document.querySelectorAll('.f_price').forEach(input => {
-            input.value = this.value;
-            input.dispatchEvent(new Event('input'));
-          });
-        });
-      }
-    });
+    function applyAddUniform() {
+      const v = document.getElementById('f_uniformPrice').value;
+      document.querySelectorAll('#f_headRows .per-head-input').forEach(i => i.value = v);
+      calcAddSummary();
+    }
 
-    // ========== ADD FORM SUBMISSION ==========
-    document.getElementById('addForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+    function getAddPrices() {
+      return Array.from(document.querySelectorAll('#f_headRows .per-head-input')).map(i => parseFloat(i.value) || 0);
+    }
 
-      const name = document.getElementById('f_name').value.trim();
-      const phone = document.getElementById('f_phone').value.trim();
+    function calcAddSummary() {
       const qty = parseInt(document.getElementById('f_qty').value) || 0;
+      const paid = parseFloat(document.getElementById('f_paid').value) || 0;
+      let total = 0;
 
-      if (!name || !phone || qty < 1) {
-        showNotification('يرجى ملء جميع الحقول المطلوبة', 'error');
-        return;
+      if (qty > 1) {
+        const prices = getAddPrices();
+        prices.forEach((p, i) => {
+          const el = document.getElementById('f_sub_' + i);
+          if (el) el.textContent = p ? formatNum(p) : '—';
+        });
+        total = prices.reduce((s, p) => s + p, 0);
+      } else if (qty === 1) {
+        total = parseFloat(document.getElementById('f_price').value) || 0;
       }
 
-      const items = [];
+      const rem = Math.max(0, total - paid);
+      document.getElementById('f_total').value = total ? total.toFixed(2) : '';
+      document.getElementById('f_remaining').value = total ? rem.toFixed(2) : '';
+    }
+
+    // ─── EDIT MODAL: QTY CHANGE ─────────────────────────────────────────────
+    function onEditQtyChange() {
+      const qty = parseInt(document.getElementById('e_qty').value) || 0;
+      document.getElementById('e_perHeadSection').style.display = qty > 1 ? 'block' : 'none';
+      document.getElementById('e_singleSection').style.display = qty === 1 ? 'block' : 'none';
+      if (qty > 1) buildEditRows(qty, []);
+      calcEditSummary();
+    }
+
+    function buildEditRows(qty, existing) {
+      const container = document.getElementById('e_headRows');
+      container.innerHTML = '';
+      for (let i = 0; i < qty; i++) {
+        const val = existing[i] !== undefined ? existing[i] : '';
+        const row = document.createElement('div');
+        row.className = 'per-head-row';
+        row.innerHTML = `
+      <div class="per-head-num">${i + 1}</div>
+      <div class="per-head-label">الرأس ${i + 1}</div>
+      <input type="number" class="per-head-input" min="0" step="0.01"
+             placeholder="سعر الرأس ${i + 1}..." value="${val}"
+             oninput="calcEditSummary()">
+      <div class="per-head-subtotal" id="e_sub_${i}">${val ? formatNum(val) : '—'}</div>`;
+        container.appendChild(row);
+      }
+      calcEditSummary();
+    }
+
+    function onEditSamePriceToggle() {
+      const on = document.getElementById('e_samePrice').checked;
+      document.getElementById('e_samePriceWrap').style.display = on ? 'block' : 'none';
+      if (!on) document.getElementById('e_uniformPrice').value = '';
+    }
+
+    function applyEditUniform() {
+      const v = document.getElementById('e_uniformPrice').value;
+      document.querySelectorAll('#e_headRows .per-head-input').forEach(i => i.value = v);
+      calcEditSummary();
+    }
+
+    function getEditPrices() {
+      return Array.from(document.querySelectorAll('#e_headRows .per-head-input')).map(i => parseFloat(i.value) || 0);
+    }
+
+    function calcEditSummary() {
+      const qty = parseInt(document.getElementById('e_qty').value) || 0;
+      const paid = parseFloat(document.getElementById('e_paid').value) || 0;
+      let total = 0;
+
+      if (qty > 1) {
+        const prices = getEditPrices();
+        prices.forEach((p, i) => {
+          const el = document.getElementById('e_sub_' + i);
+          if (el) el.textContent = p ? formatNum(p) : '—';
+        });
+        total = prices.reduce((s, p) => s + p, 0);
+      } else if (qty === 1) {
+        total = parseFloat(document.getElementById('e_price').value) || 0;
+      }
+
+      const rem = Math.max(0, total - paid);
+      document.getElementById('e_total').value = total ? total.toFixed(2) : '';
+      document.getElementById('e_remaining').value = total ? rem.toFixed(2) : '';
+    }
+
+    // ─── ADD RECORD ─────────────────────────────────────────────────────────
+    function addRecord() {
+      const customer = document.getElementById('f_customer').value.trim();
+      const phone = document.getElementById('f_phone').value.trim();
+      const sheepId = document.getElementById('f_sheepId').value.trim();
+      const qty = parseInt(document.getElementById('f_qty').value);
+      const paid = parseFloat(document.getElementById('f_paid').value) || 0;
+      const delivery = document.getElementById('f_delivery').value;
+      const notes = document.getElementById('f_notes').value.trim();
+
+      if (!customer) return notify('يرجى إدخال اسم العميل', 'error');
+      if (!sheepId) return notify('يرجى إدخال رقم الخروف', 'error');
+      if (!qty || qty < 1) return notify('يرجى إدخال كمية صحيحة', 'error');
+      if (paid < 0) return notify('المبلغ المدفوع لا يمكن أن يكون سالباً', 'error');
+
+      let headPrices, total;
 
       if (qty === 1) {
-        const price = parseFloat(document.getElementById('f_singlePrice').value) || 0;
-        const paid = parseFloat(document.getElementById('f_singlePaid').value) || 0;
-        items.push({ price, paid });
+        const price = parseFloat(document.getElementById('f_price').value);
+        if (!price || price <= 0) return notify('يرجى إدخال سعر صحيح', 'error');
+        headPrices = [price];
+        total = price;
       } else {
-        document.querySelectorAll('.per-head-row').forEach((row, index) => {
-          const price = parseFloat(row.querySelector('.f_price').value) || 0;
-          const paid = parseFloat(row.querySelector('.f_paid').value) || 0;
-          items.push({ price, paid });
-        });
+        headPrices = getAddPrices();
+        if (headPrices.some(p => p <= 0)) return notify('يرجى إدخال سعر صحيح لكل رأس', 'error');
+        total = headPrices.reduce((s, p) => s + p, 0);
       }
 
-      const order = {
-        id: Date.now(),
-        name,
-        phone,
-        qty,
-        items,
-        totalAmount: items.reduce((sum, item) => sum + item.price, 0),
-        paidAmount: items.reduce((sum, item) => sum + item.paid, 0),
-        timestamp: new Date().toLocaleString('ar-SA')
-      };
+      const remaining = Math.max(0, total - paid);
+      const status = remaining <= 0 ? 'paid' : 'pending';
 
-      orders.push(order);
-      localStorage.setItem('orders', JSON.stringify(orders));
-      renderTable();
-      this.reset();
-      qtyInput.value = '1';
-      singleSection.style.display = 'grid';
-      perHeadSection.style.display = 'none';
-      showNotification('✅ تم حفظ الطلب بنجاح');
-      updateSummary();
-    });
+      records.unshift({ id: generateId(), customer, phone, sheepId, qty, headPrices, total, paid, remaining, status, delivery, notes, createdAt: new Date().toISOString() });
+      saveData(); resetForm(); renderTable(); updateSummary();
+      notify('✅ تم إضافة السجل بنجاح', 'success');
+    }
 
-    // ========== TABLE RENDERING ==========
-    function renderTable(filter = 'all') {
-      const tableBody = document.getElementById('tableBody');
-      const emptyState = document.getElementById('emptyState');
-      const recordCount = document.getElementById('recordCount');
-      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-
-      let filteredOrders = orders.filter(order => {
-        const matchesSearch = order.name.toLowerCase().includes(searchTerm) ||
-                            order.phone.includes(searchTerm);
-        const remaining = order.totalAmount - order.paidAmount;
-        const matchesFilter = 
-          filter === 'all' ||
-          (filter === 'pending' && remaining > 0) ||
-          (filter === 'paid' && remaining === 0);
-        return matchesSearch && matchesFilter;
+    function resetForm() {
+      ['f_customer', 'f_phone', 'f_sheepId', 'f_qty', 'f_price', 'f_total', 'f_paid', 'f_remaining', 'f_notes', 'f_uniformPrice'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
       });
+      document.getElementById('f_delivery').value = 'farm';
+      document.getElementById('f_samePrice').checked = false;
+      document.getElementById('f_samePriceWrap').style.display = 'none';
+      document.getElementById('f_perHeadSection').style.display = 'none';
+      document.getElementById('f_singleSection').style.display = 'none';
+      document.getElementById('f_headRows').innerHTML = '';
+    }
 
-      tableBody.innerHTML = '';
+    // ─── EDIT RECORD ────────────────────────────────────────────────────────
+    function openEdit(id) {
+      const r = records.find(x => x.id === id);
+      if (!r) return;
+      editingId = id;
 
-      if (filteredOrders.length === 0) {
-        emptyState.style.display = 'block';
-        recordCount.textContent = '0 طلب';
+      document.getElementById('e_customer').value = r.customer;
+      document.getElementById('e_phone').value = r.phone || '';
+      document.getElementById('e_sheepId').value = r.sheepId;
+      document.getElementById('e_qty').value = r.qty;
+      document.getElementById('e_paid').value = r.paid || '';
+      document.getElementById('e_delivery').value = r.delivery;
+      document.getElementById('e_notes').value = r.notes || '';
+      document.getElementById('e_samePrice').checked = false;
+      document.getElementById('e_samePriceWrap').style.display = 'none';
+      document.getElementById('e_uniformPrice').value = '';
+
+      if (r.qty > 1) {
+        document.getElementById('e_perHeadSection').style.display = 'block';
+        document.getElementById('e_singleSection').style.display = 'none';
+        buildEditRows(r.qty, r.headPrices || []);
+      } else {
+        document.getElementById('e_perHeadSection').style.display = 'none';
+        document.getElementById('e_singleSection').style.display = 'block';
+        document.getElementById('e_price').value = r.headPrices ? r.headPrices[0] : '';
+        calcEditSummary();
+      }
+
+      document.getElementById('e_total').value = r.total ? parseFloat(r.total).toFixed(2) : '';
+      document.getElementById('e_remaining').value = r.remaining ? parseFloat(r.remaining).toFixed(2) : '';
+      document.getElementById('editModal').classList.add('active');
+    }
+
+    function closeEdit() { document.getElementById('editModal').classList.remove('active'); editingId = null; }
+
+    function saveEdit() {
+      const customer = document.getElementById('e_customer').value.trim();
+      const phone = document.getElementById('e_phone').value.trim();
+      const sheepId = document.getElementById('e_sheepId').value.trim();
+      const qty = parseInt(document.getElementById('e_qty').value);
+      const paid = parseFloat(document.getElementById('e_paid').value) || 0;
+      const delivery = document.getElementById('e_delivery').value;
+      const notes = document.getElementById('e_notes').value.trim();
+
+      if (!customer) return notify('يرجى إدخال اسم العميل', 'error');
+      if (!sheepId) return notify('يرجى إدخال رقم الخروف', 'error');
+      if (!qty || qty < 1) return notify('يرجى إدخال كمية صحيحة', 'error');
+      if (paid < 0) return notify('المبلغ المدفوع لا يمكن أن يكون سالباً', 'error');
+
+      let headPrices, total;
+
+      if (qty === 1) {
+        const price = parseFloat(document.getElementById('e_price').value);
+        if (!price || price <= 0) return notify('يرجى إدخال سعر صحيح', 'error');
+        headPrices = [price];
+        total = price;
+      } else {
+        headPrices = getEditPrices();
+        if (headPrices.some(p => p <= 0)) return notify('يرجى إدخال سعر صحيح لكل رأس', 'error');
+        total = headPrices.reduce((s, p) => s + p, 0);
+      }
+
+      const remaining = Math.max(0, total - paid);
+      const status = remaining <= 0 ? 'paid' : 'pending';
+      const idx = records.findIndex(r => r.id === editingId);
+      if (idx === -1) return;
+
+      records[idx] = { ...records[idx], customer, phone, sheepId, qty, headPrices, total, paid, remaining, status, delivery, notes };
+      saveData(); closeEdit(); renderTable(); updateSummary();
+      notify('✏️ تم تحديث السجل بنجاح', 'success');
+    }
+
+    // ─── FILTER & RENDER ────────────────────────────────────────────────────
+    function setFilter(f) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`[data-filter="${f}"]`).classList.add('active');
+      renderTable();
+    }
+
+    function getFiltered() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      return records.filter(r => {
+        const ms = !q || r.customer.toLowerCase().includes(q) || r.sheepId.toLowerCase().includes(q);
+        const mf = currentFilter === 'all' ||
+          (currentFilter === 'paid' && r.status === 'paid') ||
+          (currentFilter === 'pending' && r.status === 'pending') ||
+          (currentFilter === 'delivered' && r.delivery === 'delivered') ||
+          (currentFilter === 'farm' && r.delivery === 'farm');
+        return ms && mf;
+      });
+    }
+
+    function formatNum(n) {
+      return parseFloat(n || 0).toLocaleString('ar-LY', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+    }
+
+    function formatDate(iso) {
+      return new Date(iso).toLocaleDateString('ar-LY', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function escHtml(t) {
+      return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function highlight(text, q) {
+      if (!q) return escHtml(text);
+      const i = text.toLowerCase().indexOf(q.toLowerCase());
+      if (i === -1) return escHtml(text);
+      return escHtml(text.slice(0, i)) + '<mark>' + escHtml(text.slice(i, i + q.length)) + '</mark>' + escHtml(text.slice(i + q.length));
+    }
+
+    function renderPricesCell(r) {
+      const prices = r.headPrices || [];
+      if (prices.length === 0) return `<span style="font-weight:700;">${formatNum(r.total)}</span>`;
+
+      if (prices.length === 1) {
+        return `<span style="font-weight:700;">${formatNum(prices[0])}</span>`;
+      }
+
+      // Check if all same
+      const allSame = prices.every(p => p === prices[0]);
+      if (allSame) {
+        return `<div style="font-weight:700;">${formatNum(prices[0])}</div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">نفس السعر × ${prices.length}</div>`;
+      }
+
+      // Different prices — show chips
+      const chips = prices.map((p, i) =>
+        `<span class="price-chip"><span class="price-chip-num">${i + 1}</span>${formatNum(p)}</span>`
+      ).join('');
+
+      return `<div class="prices-chips">${chips}</div>`;
+    }
+
+    function renderTable() {
+      const filtered = getFiltered();
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const tbody = document.getElementById('tableBody');
+      const empty = document.getElementById('emptyState');
+
+      document.getElementById('recordCount').textContent = filtered.length + ' سجل';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
         return;
       }
 
-      emptyState.style.display = 'none';
-      recordCount.textContent = `${filteredOrders.length} طلب`;
+      empty.style.display = 'none';
 
-      filteredOrders.forEach((order, index) => {
-        const remaining = order.totalAmount - order.paidAmount;
-        const status = remaining === 0 ? 'badge-success' : 'badge-danger';
-        const statusText = remaining === 0 ? '✅ مدفوع' : '⏳ قيد الانتظار';
+      tbody.innerHTML = filtered.map((r, i) => {
+        const payBadge = r.status === 'paid'
+          ? '<span class="badge badge-success">✓ مدفوع</span>'
+          : '<span class="badge badge-danger">⏳ معلق</span>';
+        const delBadge = r.delivery === 'delivered'
+          ? '<span class="badge badge-info">🚚 مُسلَّم</span>'
+          : '<span class="badge badge-warning">🏡 في المزرعة</span>';
 
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td class="td-name">${order.name}</td>
-          <td class="td-phone">${order.phone}</td>
-          <td class="td-sheep">${order.qty}</td>
-          <td>${formatCurrency(order.totalAmount)}</td>
-          <td class="td-paid">${formatCurrency(order.paidAmount)}</td>
-          <td class="td-remaining">${formatCurrency(remaining)}</td>
-          <td><span class="badge ${status}">${statusText}</span></td>
-          <td>
-            <button class="btn btn-sm btn-outline" onclick="showDetails(${order.id})">👁️ عرض</button>
-          </td>
-          <td>
-            <div class="actions-cell">
-              <button class="btn btn-sm btn-warning" onclick="editOrder(${order.id})">✏️</button>
-              <button class="btn btn-sm btn-danger" onclick="deleteOrder(${order.id})">🗑️</button>
-            </div>
-          </td>
-        `;
-        tableBody.appendChild(row);
+        return `<tr>
+      <td style="color:var(--text-muted);font-size:0.75rem;">${i + 1}</td>
+      <td>
+        <div class="td-name">${highlight(r.customer, q)}</div>
+        ${r.notes ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">${escHtml(r.notes.slice(0, 40))}${r.notes.length > 40 ? '…' : ''}</div>` : ''}
+      </td>
+      <td><div class="td-phone">${escHtml(r.phone || '—')}</div></td>
+      <td><div class="td-sheep">${highlight(r.sheepId, q)}</div></td>
+      <td style="font-weight:700;text-align:center;">${r.qty}</td>
+      <td>${renderPricesCell(r)}</td>
+      <td class="td-amount">${formatNum(r.total)}</td>
+      <td class="td-amount td-paid">${formatNum(r.paid)}</td>
+      <td class="td-amount td-remaining">${formatNum(r.remaining)}</td>
+      <td>${payBadge}</td>
+      <td>${delBadge}</td>
+      <td style="font-size:0.76rem;color:var(--text-muted);white-space:nowrap;">${formatDate(r.createdAt)}</td>
+      <td>
+        <div class="actions-cell">
+          <button class="btn btn-outline btn-sm btn-icon" title="تعديل" onclick="openEdit('${r.id}')">✏️</button>
+          <button class="btn btn-danger btn-sm btn-icon" title="حذف" onclick="confirmDelete('${r.id}')">🗑️</button>
+        </div>
+      </td>
+    </tr>`;
+      }).join('');
+    }
+
+    // ─── SUMMARY ────────────────────────────────────────────────────────────
+    function updateSummary() {
+      const total = records.reduce((s, r) => s + (r.total || 0), 0);
+      const paid = records.reduce((s, r) => s + (r.paid || 0), 0);
+      const remaining = records.reduce((s, r) => s + (r.remaining || 0), 0);
+      const pending = records.filter(r => r.status === 'pending').length;
+      document.getElementById('sum-records').textContent = records.length;
+      document.getElementById('sum-total').textContent = formatNum(total);
+      document.getElementById('sum-paid').textContent = formatNum(paid);
+      document.getElementById('sum-remaining').textContent = formatNum(remaining);
+      document.getElementById('hdr-total').textContent = records.length;
+      document.getElementById('hdr-pending').textContent = pending;
+    }
+
+    // ─── DELETE ──────────────────────────────────────────────────────────────
+    function confirmDelete(id) {
+      showConfirm('🗑️', 'حذف السجل', 'هل أنت متأكد أنك تريد حذف هذا السجل؟ لا يمكن التراجع.', () => {
+        records = records.filter(r => r.id !== id);
+        saveData(); renderTable(); updateSummary();
+        notify('🗑️ تم حذف السجل', 'success');
       });
     }
 
-    // ========== MODAL HANDLERS ==========
-    function showDetails(orderId) {
-      const order = orders.find(o => o.id === orderId);
-      if (!order) return;
-
-      currentOrderId = orderId;
-      const modalContent = document.getElementById('modalContent');
-      const remaining = order.totalAmount - order.paidAmount;
-
-      let itemsHTML = '<div class="form-section-label" style="margin-bottom: 16px;">تفاصيل الحيوانات</div>';
-      order.items.forEach((item, index) => {
-        const itemRemaining = item.price - item.paid;
-        itemsHTML += `
-          <div style="background: #f8fffe; padding: 12px; border-radius: 8px; margin-bottom: 10px;">
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 0.85rem;">
-              <div>
-                <div style="color: var(--text-muted); font-size: 0.75rem;">حيوان #${index + 1}</div>
-                <div style="font-weight: 700;">السعر: ${formatCurrency(item.price)}</div>
-              </div>
-              <div>
-                <div style="color: var(--text-muted); font-size: 0.75rem;">المدفوع</div>
-                <div style="font-weight: 700; color: var(--primary);">${formatCurrency(item.paid)}</div>
-              </div>
-              <div>
-                <div style="color: var(--text-muted); font-size: 0.75rem;">المتبقي</div>
-                <div style="font-weight: 700; color: var(--danger);">${formatCurrency(itemRemaining)}</div>
-              </div>
-            </div>
-          </div>
-        `;
+    function confirmClearAll() {
+      if (!records.length) return notify('لا توجد سجلات للمسح', 'error');
+      showConfirm('⚠️', 'مسح جميع السجلات', `سيتم حذف جميع السجلات (${records.length} سجل) بشكل نهائي. هل أنت متأكد؟`, () => {
+        records = []; saveData(); renderTable(); updateSummary();
+        notify('🗑️ تم مسح جميع السجلات', 'success');
       });
-
-      modalContent.innerHTML = `
-        <div class="form-group" style="margin-bottom: 16px;">
-          <label class="form-label">اسم العميل</label>
-          <input type="text" class="form-input" value="${order.name}" readonly>
-        </div>
-        <div class="form-group" style="margin-bottom: 16px;">
-          <label class="form-label">رقم الهاتف</label>
-          <input type="text" class="form-input" value="${order.phone}" readonly>
-        </div>
-        <div class="form-section-label">الملخص المالي</div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
-          <div style="background: #f0fdf8; padding: 16px; border-radius: 8px; text-align: center;">
-            <div style="color: var(--text-muted); font-size: 0.8rem;">الإجمالي</div>
-            <div style="font-weight: 800; font-size: 1.2rem; color: var(--primary);">${formatCurrency(order.totalAmount)}</div>
-          </div>
-          <div style="background: #f0f9ff; padding: 16px; border-radius: 8px; text-align: center;">
-            <div style="color: var(--text-muted); font-size: 0.8rem;">المدفوع</div>
-            <div style="font-weight: 800; font-size: 1.2rem; color: var(--primary);">${formatCurrency(order.paidAmount)}</div>
-          </div>
-          <div style="background: #fef2f2; padding: 16px; border-radius: 8px; text-align: center;">
-            <div style="color: var(--text-muted); font-size: 0.8rem;">المتبقي</div>
-            <div style="font-weight: 800; font-size: 1.2rem; color: var(--danger);">${formatCurrency(remaining)}</div>
-          </div>
-        </div>
-        ${itemsHTML}
-      `;
-
-      document.getElementById('detailsModal').classList.add('active');
     }
 
-    function editOrder(orderId) {
-      const order = orders.find(o => o.id === orderId);
-      if (!order) return;
-
-      currentEditOrderId = orderId;
-      document.getElementById('edit_name').value = order.name;
-      document.getElementById('edit_phone').value = order.phone;
-
-      const container = document.getElementById('edit_items_container');
-      container.innerHTML = '<div class="form-section-label" style="margin-top: 16px;">تفاصيل الحيوانات</div>';
-
-      order.items.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.style.marginBottom = '16px';
-        itemDiv.style.padding = '16px';
-        itemDiv.style.background = '#f8fffe';
-        itemDiv.style.borderRadius = '8px';
-        itemDiv.innerHTML = `
-          <div style="font-weight: 700; margin-bottom: 12px; color: var(--text-muted);">حيوان #${index + 1}</div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label">السعر</label>
-              <input type="number" class="form-input edit_item_price" data-index="${index}" value="${item.price}">
-            </div>
-            <div class="form-group">
-              <label class="form-label">المدفوع</label>
-              <input type="number" class="form-input edit_item_paid" data-index="${index}" value="${item.paid}">
-            </div>
-          </div>
-        `;
-        container.appendChild(itemDiv);
-      });
-
-      document.getElementById('editModal').classList.add('active');
-      document.getElementById('detailsModal').classList.remove('active');
+    // ─── BACKUP ──────────────────────────────────────────────────────────────
+    function exportBackup() {
+      if (!records.length) return notify('لا توجد سجلات للتصدير', 'error');
+      const data = JSON.stringify({ version: 3, exportedAt: new Date().toISOString(), records }, null, 2);
+      const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([data], { type: 'application/json' })), download: 'livestock_backup_' + new Date().toISOString().slice(0, 10) + '.json' });
+      a.click();
+      notify('📤 تم تصدير النسخة الاحتياطية', 'success');
     }
 
-    document.getElementById('saveEditBtn').addEventListener('click', function() {
-      const order = orders.find(o => o.id === currentEditOrderId);
-      if (!order) return;
+    function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          const imported = data.records || (Array.isArray(data) ? data : null);
+          if (!imported || !Array.isArray(imported)) throw 0;
+          showConfirm('📥', 'استيراد النسخة الاحتياطية', `سيتم استبدال السجلات الحالية بـ ${imported.length} سجل مستورد. هل تريد المتابعة؟`, () => {
+            records = imported; saveData(); renderTable(); updateSummary();
+            notify('📥 تم استيراد ' + imported.length + ' سجل بنجاح', 'success');
+          });
+        } catch { notify('❌ ملف النسخة الاحتياطية غير صالح', 'error'); }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
 
-      order.name = document.getElementById('edit_name').value.trim();
-      order.phone = document.getElementById('edit_phone').value.trim();
+    // ─── CONFIRM ─────────────────────────────────────────────────────────────
+    function showConfirm(icon, title, text, cb) {
+      document.getElementById('confirmIcon').textContent = icon;
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmText').textContent = text;
+      confirmCallback = cb;
+      document.getElementById('confirmModal').classList.add('active');
+    }
+    function closeConfirm() { document.getElementById('confirmModal').classList.remove('active'); confirmCallback = null; }
+    document.getElementById('confirmYes').onclick = () => { if (confirmCallback) confirmCallback(); closeConfirm(); };
+    document.getElementById('confirmModal').onclick = e => { if (e.target === e.currentTarget) closeConfirm(); };
+    document.getElementById('editModal').onclick = e => { if (e.target === e.currentTarget) closeEdit(); };
 
-      document.querySelectorAll('.edit_item_price').forEach((input, index) => {
-        order.items[index].price = parseFloat(input.value) || 0;
-      });
+    // ─── NOTIFICATIONS ────────────────────────────────────────────────────────
+    function notify(msg, type = 'success') {
+      const icons = { success: '✅', error: '❌' };
+      const el = document.createElement('div');
+      el.className = `notification ${type}`;
+      el.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
+      document.getElementById('notifContainer').appendChild(el);
+      setTimeout(() => {
+        el.classList.add('notification-fade');
+        el.addEventListener('animationend', () => el.remove());
+      }, 2800);
+    }
 
-      document.querySelectorAll('.edit_item_paid').forEach((input, index) => {
-        order.items[index].paid = parseFloat(input.value) || 0;
-      });
-
-      order.totalAmount = order.items.reduce((sum, item) => sum + item.price, 0);
-      order.paidAmount = order.items.reduce((sum, item) => sum + item.paid, 0);
-
-      localStorage.setItem('orders', JSON.stringify(orders));
-      renderTable();
-      updateSummary();
-      document.getElementById('editModal').classList.remove('active');
-      showNotification('✅ تم تحديث الطلب بنجاح');
-    });
-
-    function deleteOrder(orderId) {
-      if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
-        orders = orders.filter(o => o.id !== orderId);
-        localStorage.setItem('orders', JSON.stringify(orders));
-        renderTable();
-        updateSummary();
-        showNotification('✅ تم حذف الطلب بنجاح');
+    // ─── FORM TOGGLE ──────────────────────────────────────────────────────────
+    let formOpen = true;
+    function toggleForm() {
+      formOpen = !formOpen;
+      const el = document.getElementById('formCollapsible');
+      const btn = document.getElementById('formToggleBtn');
+      if (formOpen) {
+        el.style.maxHeight = el.scrollHeight + 'px';
+        el.classList.remove('closed');
+        btn.textContent = '▲ طي';
+      } else {
+        el.style.maxHeight = el.scrollHeight + 'px';
+        requestAnimationFrame(() => el.style.maxHeight = '0');
+        el.classList.add('closed');
+        btn.textContent = '▼ إظهار';
       }
     }
 
-    // ========== MODAL CLOSE HANDLERS ==========
-    document.querySelectorAll('.btn-close').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-          modal.classList.remove('active');
-        });
-      });
+    // ─── KEYBOARD ─────────────────────────────────────────────────────────────
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeEdit(); closeConfirm(); } });
+
+    // ─── BOOT ─────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData(); renderTable(); updateSummary();
+      setTimeout(() => {
+        const el = document.getElementById('formCollapsible');
+        el.style.maxHeight = el.scrollHeight + 'px';
+      }, 100);
+
+      // Register service worker for PWA
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+          .then(registration => {
+            console.log('Service Worker registered successfully:', registration);
+          })
+          .catch(error => {
+            console.log('Service Worker registration failed:', error);
+          });
+      }
     });
-
-    document.getElementById('closeModalBtn').addEventListener('click', function() {
-      document.getElementById('detailsModal').classList.remove('active');
-    });
-
-    document.getElementById('closeEditModalBtn').addEventListener('click', function() {
-      document.getElementById('editModal').classList.remove('active');
-    });
-
-    document.getElementById('editOrderBtn').addEventListener('click', function() {
-      editOrder(currentOrderId);
-    });
-
-    // ========== SEARCH AND FILTER ==========
-    document.getElementById('searchInput').addEventListener('input', function() {
-      renderTable(document.querySelector('.filter-tab.active').dataset.filter);
-    });
-
-    document.querySelectorAll('.filter-tab').forEach(tab => {
-      tab.addEventListener('click', function() {
-        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        renderTable(this.dataset.filter);
-      });
-    });
-
-    // ========== SUMMARY UPDATE ==========
-    function updateSummary() {
-      const totalAmount = orders.reduce((sum, order) => sum + order.totalAmount, 0);
-      const paidAmount = orders.reduce((sum, order) => sum + order.paidAmount, 0);
-      const remainingAmount = totalAmount - paidAmount;
-      const totalAnimals = orders.reduce((sum, order) => sum + order.qty, 0);
-
-      document.getElementById('summaryTotalAmount').textContent = formatCurrency(totalAmount);
-      document.getElementById('summaryPaidAmount').textContent = formatCurrency(paidAmount);
-      document.getElementById('summaryRemainingAmount').textContent = formatCurrency(remainingAmount);
-      document.getElementById('totalAnimals').textContent = totalAnimals;
-    }
-
-    // ========== INITIALIZE ==========
-    renderTable();
-    updateSummary();
   </script>
 </body>
 
