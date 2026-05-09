@@ -3,11 +3,9 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#006064">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="192.png">
+  <meta name="theme-color" content="#1a357a">
   <title>إجريمة لبيع أضاحي العيد</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
@@ -22,8 +20,8 @@
 
     :root {
       --primary: #006064;
-      --primary-light: #008c91;
-      --primary-dark: #004345;
+      --primary-light: #006064;
+      --primary-dark: #006064;
       --danger: #e53e3e;
       --warning: #d97706;
       --bg: #f4f6f8;
@@ -341,12 +339,15 @@
 
     .per-head-body {
       padding: 16px;
+      height: 100%;
     }
 
     .per-head-rows {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      height: 100%;
+      overflow-y: auto;
     }
 
     .per-head-row {
@@ -1491,7 +1492,12 @@
       const qty = parseInt(document.getElementById('f_qty').value) || 0;
       document.getElementById('f_perHeadSection').style.display = qty > 1 ? 'block' : 'none';
       document.getElementById('f_singleSection').style.display = qty === 1 ? 'block' : 'none';
-      if (qty > 1) buildAddRows(qty);
+      if (qty > 1) {
+        document.getElementById('f_perHeadSection').style.height = '100vh';
+        buildAddRows(qty);
+      } else {
+        document.getElementById('f_perHeadSection').style.height = '';
+      }
       if (qty < 1) { document.getElementById('f_total').value = ''; document.getElementById('f_remaining').value = ''; }
     }
 
